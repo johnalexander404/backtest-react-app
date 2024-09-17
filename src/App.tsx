@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
-import {CredentialResponse, GoogleOAuthProvider} from '@react-oauth/google'
+import {CredentialResponse, googleLogout, GoogleOAuthProvider} from '@react-oauth/google'
 import Login from './Login'
 import Dashboard from './Dashboard'
 
@@ -19,6 +19,13 @@ export default function App() {
     setIsAuthenticated(true)
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    googleLogout()
+    setIsAuthenticated(false)
+  }
+
+
   return (
     <GoogleOAuthProvider clientId="963423760132-o2fb0vs0egotehr1kbsm98l7uk7e7kfk.apps.googleusercontent.com">
       <Router>
@@ -35,7 +42,7 @@ export default function App() {
             path="/dashboard"
             element={
               isAuthenticated ?
-              <Dashboard /> :
+              <Dashboard handleLogout={handleLogout} /> :
               <Navigate to="/login" />
             }
           />
